@@ -1,0 +1,9 @@
+<advancedpdftemplate scriptid="custtmpl_116_5227067_sb1_725" standard="STDTMPLEMPTY">
+  <description></description>
+  <displaysourcecode>T</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>F</preferred>
+  <printtype>TRANSACTION</printtype>
+  <title>TKO - Remision Template</title>
+  <trantype>CUSTINVC</trantype>
+</advancedpdftemplate>

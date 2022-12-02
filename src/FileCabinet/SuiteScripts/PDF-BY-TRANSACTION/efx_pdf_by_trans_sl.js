@@ -12,7 +12,7 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
  * @param{search} search
  */
 function(log, render, record, serverWidget, search) {
-   
+
     /**
      * Definition of the Suitelet script trigger point.
      *
@@ -38,7 +38,7 @@ function(log, render, record, serverWidget, search) {
             if (requiredSearch === false || requiredSearch === 'false') {
                 var renderer = render.create();
                 renderer.addRecord({
-                    templateName: 'results',
+                    templateName: 'record', //! Alias para el pdf
                     record: record.load({
                         type: typeRecord,
                         id: recordID
@@ -100,5 +100,5 @@ function(log, render, record, serverWidget, search) {
     return {
         onRequest: onRequest
     };
-    
+
 });

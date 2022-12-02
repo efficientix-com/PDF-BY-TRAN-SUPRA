@@ -1,0 +1,335 @@
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+    <#setting locale = "es_MX">
+    <#setting time_zone= "America/Mexico_City">
+    <#setting number_format=",##0.00">
+
+    <head>
+        <#assign "shipmentcost" = 0>
+        <link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}"
+              src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}"
+              src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2"/>
+        <#if .locale == "zh_CN">
+            <link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}"
+                  src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2"/>
+        <#elseif .locale == "zh_TW">
+            <link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}"
+                  src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2"/>
+        <#elseif .locale == "ja_JP">
+            <link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}"
+                  src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2"/>
+        <#elseif .locale == "ko_KR">
+            <link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}"
+                  src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2"/>
+        <#elseif .locale == "th_TH">
+            <link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}"
+                  src-bold="${nsfont.NotoSansThai_Bold}" bytes="2"/>
+        </#if>
+        <macrolist>
+            <macro id="nlheader">
+                <table class="header" height="110px" style="width: 100%;">
+                    <tr height="110px">
+                        <#--  Logo  -->
+                        <td colspan="4" height="110px">
+                            <#if record.custbody_efx_fe_logosub?has_content>
+                                <#assign "urldir" = "https://system.netsuite.com"+record.custbody_efx_fe_logosub>
+                                <img width="140" height="70" src="${urldir}"/>
+                            </#if>
+                        </td>
+
+                        <td colspan="7" align="center" style="font-size: 8px;">
+                            <table style="width: 100%">
+                                <tr>
+                                    <td style="font-size: 10px" align="center">
+                                        SUPRA DESARROLLOS TECNOLOGICOS
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="font-size: 8px" align="center">
+                                        <P style="text-align: center;">
+                                            ${record.custbody_efx_fe_dirsubs?keep_before_last("<br />")}<br /><br />
+                                            TEL: ${record.subsidiary.custrecord_efx_fe_add_phone} &nbsp; www.supradesarrollos.com
+                                        </P>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                        <td colspan="4" style="font-size: 10px;" align="right">
+                            <table style="width: 100%; border: 1px solid black;">
+                                <tr>
+                                    <td colspan="10" style="background-color: #e3e3e3; font-size:8px; padding: 4px;" align="center"><strong>Comprobante Fiscal Digital Ingreso</strong></td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="5" style="font-size:9px; padding: 4px;"><strong>Serie: </strong>${record.custbody_mx_cfdi_serie}</td>
+                                    <td colspan="5" style="font-size:9px; padding: 4px;"><strong>Folio: </strong>${record.custbody_mx_cfdi_folio}</td>
+                                </tr>
+
+                                <tr>
+                                    <#assign aDateTime = .now>
+                                    <td colspan="10" style="font-size:9px; padding: 4px;"><strong>Fecha: </strong>${aDateTime?iso_utc}</td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="10" style="font-size:9px; padding: 4px;"><strong>Uso CFDI: </strong>${record.custbody_mx_cfdi_usage}</td>
+                                </tr>
+
+                                <tr>
+                                    <td colspan="5" style="font-size:9px; padding: 4px;"><strong>Moneda: </strong>${record.currencycode}</td>
+                                    <td colspan="5" style="font-size:9px; padding: 4px;"><strong>T.C: </strong>${record.exchangerate}</td>
+                                </tr>
+                            </table>
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td colspan="15" style="font-size:9px; border-bottom: 1px solid black;"><b> Regimen fiscal: </b> ${record.subsidiary.custrecord_mx_sat_industry_type}</td>
+                    </tr>
+                </table>
+            </macro>
+
+            <macro id="nlfooter">
+                <table class="footer" style="width: 100%;">
+                    <tr>
+                        <td style="font-size: 6pt; text-align:left;">ESTE DOCUMENTO ES UNA REPRESENTACIÓN FISICA DE UNA TRANSACCIÓN DE REMISIÓN.</td>
+                        <td align="right">
+                            <pagenumber/>
+                            de
+                            <totalpages/>
+                        </td>
+                    </tr>
+                </table>
+            </macro>
+        </macrolist>
+        <style type="text/css">
+            * {
+                <#if .locale == "zh_CN"> font-family: NotoSans, NotoSansCJKsc, sans-serif;
+                <#elseif .locale == "zh_TW"> font-family: NotoSans, NotoSansCJKtc, sans-serif;
+                <#elseif .locale == "ja_JP"> font-family: NotoSans, NotoSansCJKjp, sans-serif;
+                <#elseif .locale == "ko_KR"> font-family: NotoSans, NotoSansCJKkr, sans-serif;
+                <#elseif .locale == "th_TH"> font-family: NotoSans, NotoSansThai, sans-serif;
+                <#else> font-family: NotoSans, sans-serif;
+                </#if>
+                }
+
+                table {
+                    font-size: 9pt;
+                    table-layout: fixed;
+                }
+
+                th {
+                    font-weight: bold;
+                    font-size: 8pt;
+                    vertical-align: middle;
+                    /*padding: 5px 6px 3px;
+                    background-color: #e3e3e3;
+                    color: #161616;*/
+                }
+
+                table.tablascompletas {
+                    width: 100%;
+                    margin-top: 10px;
+                    border: 1px;
+                    border-color: #e3e3e3
+                }
+
+                td.cuerposnoarticulos {
+                    padding: 2px;
+                    font-size: 7pt;
+                }
+
+                td.cabecera, th.cabecera {
+                    color: #000000;
+                    font-size: 8pt;
+                    background-color: #e3e3e3;
+                    padding: 2px;
+                }
+
+                td {
+                    padding: 4px 6px;
+                }
+
+                td p {
+                    align: left
+                }
+
+                b {
+                    font-weight: bold;
+                    color: #000000;
+                }
+
+                table.header td {
+                    padding: 0px;
+                    font-size: 10pt;
+                }
+
+                table.footer td {
+                    padding: 0px;
+                    font-size: 8pt;
+                }
+
+                table.itemtable th {
+                    padding-bottom: 10px;
+                    padding-top: 10px;
+
+                }
+
+                table.testing *{
+                    /* TESTING */
+                    border: 1px solid red;
+                }
+
+                table.desglose td {
+                    font-size: 4pt;
+                    padding-top: 0px;
+                    padding-bottom: 0px;
+                }
+
+                table.body td {
+                    padding-top: 2px;
+                }
+
+                table.total {
+                    page-break-inside: avoid;
+                }
+
+                tr.totalrow {
+                    background-color: #e3e3e3;
+                    line-height: 200%;
+                }
+
+                td.totalboxtop {
+                    font-size: 12pt;
+                    background-color: #e3e3e3;
+                }
+
+                td.addressheader {
+                    font-size: 8pt;
+                    padding-top: 6px;
+                    padding-bottom: 2px;
+                }
+
+                td.subtotal {
+                    text-align: right;
+                }
+
+                td.address {
+                    padding-top: 0px;
+                }
+
+                td.totalboxmid {
+                    font-size: 28pt;
+                    padding-top: 20px;
+                    background-color: #e3e3e3;
+                }
+
+                td.totalboxbot {
+                    background-color: #e3e3e3;
+                    font-weight: bold;
+                }
+
+                span.title {
+                    font-size: 28pt;
+                }
+
+                span.number {
+                    font-size: 16pt;
+                }
+
+                span.itemname {
+                    font-weight: bold;
+                    line-height: 150%;
+                }
+
+                hr {
+                    width: 100%;
+                    color: #ffffff;
+                    background-color: #e3e3e3;
+                    height: 1px;
+                }
+        </style>
+    </head>
+    <body header="nlheader" header-height="13%" footer="nlfooter" footer-height="20pt"  size="Letter">
+        <table  style="width: 100%; margin-top: 10px; border-bottom: 1px solid black">
+            <tr>
+                <td colspan="10" style="font-size:9px;" align="left">
+                    <b>Facturado a: </b>
+                    <#if record.entity.custentity_mx_sat_registered_name?has_content>
+                        ${record.entity.custentity_mx_sat_registered_name}
+                    <#else>
+                        ${record.entityname}
+                    </#if>
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="10" style="font-size:9px;" align="left">
+                    ${record.shippingaddress_text?keep_after(" />")?upper_case}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="10" style="font-size:9px;" align="left">
+                    <b>Orden de venta: </b> ${record.createdfrom}
+                </td>
+            </tr>
+
+            <tr>
+                <td colspan="5" style="font-size:9px;" align="left">
+                    <b>Enviar a: </b> ${record.shipattention}
+                </td>
+
+                <td colspan="5" style="font-size:9px;" align="right">
+                    <b>No. de Proveedor: </b>
+                </td>
+            </tr>
+
+        </table>
+
+        <table style="width: 100%; margin-top:3px;">
+            <#list record.item as item>
+                <thead>
+                    <tr style="border-bottom: 1px solid black; margin-top: 0px; padding-top:0px; padding-bottom: 3px;">
+                        <th align="center" colspan="4" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Cantidad</th>
+                        <th align="center" colspan="2" style="font-size: 4pt; padding-left: 0px; padding-right: 0px;">Unidad</th>
+                        <th align="center" colspan="2" style="font-size: 4pt; padding-left: 0px; padding-right: 0px;">UM</th>
+                        <th align="center" colspan="3" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Clave SAT</th>
+                        <th align="center" colspan="10" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Clave</th>
+                        <th align="center" colspan="8" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Descripcion</th>
+                        <th align="center" colspan="4" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">%Desc</th>
+                        <th align="center" colspan="4" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">P/U</th>
+                        <th align="center" colspan="5" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">UPC</th>
+                        <th align="center" colspan="4" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">${item.amount@label}</th>
+                    </tr>
+                </thead>
+
+                <#assign "tipo_articulo" = item.item?keep_before(" ")>
+                <#if item.quantity?has_content==false>
+                    <#assign "line_discount" = line_discount + 1>
+                </#if>
+
+                <tr>
+                    <#assign desglose_json = item.custcol_efx_fe_tax_json>
+                    <#if desglose_json?has_content>
+                        <#assign desglose = desglose_json?eval>
+                        <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.itemquantity}</td>
+                        <td align="center" colspan="2" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.unitsdisplay}</td>
+                        <td align="center" colspan="2" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">###</td>
+                        <td align="center" colspan="3" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.custcol_mx_txn_line_sat_item_code?keep_before(" ")}</td>
+                        <td align="center" colspan="10" style="font-size: 5pt; padding-top: 4px;">${item.item?keep_before(" ")}</td>
+                        <td align="center" colspan="8" style="font-size: 5pt; padding-top: 4px;">${item.description}</td>
+                        <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${importe_discount[item_index+1]?number?string[",##0.00"]}</td>
+                        <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.rate?string[",##0.00"]}</td>
+                        <td align="center" colspan="5" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.custcol_efx_fe_upc_code}</td>
+                        <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.amount}</td>
+                        <#assign "descuento_total" = descuento_total + importe_discount[item_index+1]>
+                    </#if>
+                </tr>
+            </#list>
+        </table>
+
+    </body>
+</pdf>
