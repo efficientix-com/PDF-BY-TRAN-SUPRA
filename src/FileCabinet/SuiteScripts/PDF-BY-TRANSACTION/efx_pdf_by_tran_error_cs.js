@@ -8,7 +8,7 @@ define(['N/ui/message'],
      * @param{message} message
      */
 function(message) {
-    
+
     /**
      * Function to be executed after page is initialized.
      *
@@ -22,7 +22,7 @@ function(message) {
         try {
             var customMsg = message.create({
                 title: "Error",
-                message: "No se puede renderizar su plantilla, verifique el formato de PDF avanzado",
+                message: "No se puede renderizar su plantilla, verifique la ejecución de orden de artículo esté creada desde una ORDEN DE VENTA.",
                 type: message.Type.ERROR
             });
             customMsg.show();
@@ -34,5 +34,5 @@ function(message) {
     return {
         pageInit: pageInit,
     };
-    
+
 });

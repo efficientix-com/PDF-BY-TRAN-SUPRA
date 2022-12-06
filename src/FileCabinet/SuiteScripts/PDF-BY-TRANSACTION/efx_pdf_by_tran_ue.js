@@ -31,7 +31,10 @@ function(log, runtime, record, search) {
             var requiredSearch = scriptObj.getParameter({name: 'custscript_required_search'});
             var savedsearch = scriptObj.getParameter({name: 'custscript_id_saved_search'});
 
-            if (scriptContext.type === scriptContext.UserEventType.VIEW) {
+            var status = objRecord.getValue("status");
+            log.audit({title: 'status', details: status});
+            if (scriptContext.type === scriptContext.UserEventType.VIEW && status === "Enviado") {
+
                 log.audit({title:'account id', details: runtime.accountId});
                 log.audit('transaction parameters', {typeTransaction: typeTransaction, templateID: templateID, recordID : objRecord.id, requiredSearch: requiredSearch,
                 savedsearchID: savedsearch});
