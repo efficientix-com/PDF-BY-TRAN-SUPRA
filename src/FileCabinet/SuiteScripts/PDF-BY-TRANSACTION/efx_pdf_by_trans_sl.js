@@ -25,17 +25,31 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
 
             try {
                 var request = context.request, params = request.parameters, response = context.response;
-                var templateID = params.templateID, recordID = params.recordID, typeRecord = params.typeRecord, savedSearch = params.savedSearch, requiredSearch = params.requiredSearch;
-                log.audit('params data', {
-                    templateID: templateID,
-                    recordID: recordID,
-                    typeRecord: typeRecord,
-                    savedSearch: savedSearch,
-                    requiredSearch: requiredSearch
-                });
+                var typeRecord = params.typeRecord;
 
+                if (typeRecord != "check") {
+                    var templateID = params.templateID, recordID = params.recordID;
+                    log.audit('params data remision', {
+                        templateID: templateID,
+                        templateIDBanorte: templateIDBanorte,
+                        templateIDBancomer: templateIDBancomer,
+                        recordID: recordID,
+                        typeRecord: typeRecord
+                    });
+                } else {
+                    var templateIDBanorte = params.templateIDBanorte, templateIDBancomer = params.templateIDBancomer, recordID = params.recordID;
+                    log.audit('params data cheques', {
+                        templateIDBanorte: templateIDBanorte,
+                        templateIDBancomer: templateIDBancomer,
+                        recordID: recordID,
+                        typeRecord: typeRecord
+                    });
 
-                if (requiredSearch === false || requiredSearch === 'false') {
+                }
+
+                log.audit({ title: 'recordID', details: recordID });
+                log.audit({ title: 'typeRecord', details: typeRecord });
+                if (typeRecord != "check") {
                     var renderer = render.create();
                     renderer.setTemplateById(templateID);
 
@@ -49,7 +63,7 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                     log.audit({ title: 'tran', details: tran });
 
                     var idCreated = tran_obj.getValue("createdfrom");
-                    log.audit({title: 'idCreated', details: idCreated});
+                    log.audit({ title: 'idCreated', details: idCreated });
 
                     var OVdata = loadODV(idCreated);
                     var customData = {
@@ -77,24 +91,29 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                     }
                 } else {
                     var renderer = render.create();
-                    var searchLoad = search.load({ id: savedSearch });
-                    var filters = searchLoad.filters;
-                    log.audit({ title: 'Filters', details: filters });
-                    var customFltr = search.createFilter({
-                        name: 'internalid',
-                        operator: search.Operator.IS,
-                        values: recordID
+                    renderer.addRecord({
+                        templateName: 'record',
+                        record: record.load({
+                            type: typeRecord,
+                            id: recordID
+                        })
                     });
-                    filters.push(customFltr);
-                    searchLoad.filters = filters;
-                    log.audit({ title: 'filters mod', details: searchLoad.filters });
-                    var rs = searchLoad.run();
-                    var results = rs.getRange(0, 1000);
-                    renderer.addSearchResults({
-                        templateName: 'results',
-                        searchResult: results
+
+                    var banco = search.lookupFields({
+                        type: typeRecord,
+                        id: recordID,
+                        columns: 'custbody_tko_pbt_banco'
                     });
-                    renderer.setTemplateById(templateID);
+
+                    log.audit({title: 'banco', details: banco});
+
+                    if (banco.custbody_tko_pbt_banco[0].text == "Banorte") {
+                        renderer.setTemplateById(templateIDBanorte);
+                    } else if (banco.custbody_tko_pbt_banco[0].text == "Bancomer"){
+                        renderer.setTemplateById(templateIDBancomer);
+                    }else{
+                        renderer.setTemplateById(templateID);
+                    }
 
                     var transactionFile = renderer.renderAsPdf();
 
@@ -105,13 +124,17 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                         });
                     }
                 }
-
             } catch (e) {
                 log.error('Error on onRequest', e);
                 var formError = serverWidget.createForm({
                     title: ' '
                 });
-                formError.clientScriptModulePath = './efx_pdf_by_tran_error_cs.js';
+                if (typeRecord != "check") {
+                    formError.clientScriptModulePath = './efx_pdf_by_tran_error_cs.js';
+                } else {
+                    formError.clientScriptModulePath = './efx_pdf_by_tran_error_cs_cheques.js';
+
+                }
                 context.response.writePage(formError);
             }
 
@@ -126,21 +149,21 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
 
             var trans_st = JSON.stringify(tran_obj_ov);
             var odv = JSON.parse(trans_st)
-            log.audit({title: 'odv', details: odv});
+            log.audit({ title: 'odv', details: odv });
 
             var numLines = tran_obj_ov.getLineCount({
                 sublistId: 'item'
             });
-            log.audit({title: 'numLines', details: numLines});
+            log.audit({ title: 'numLines', details: numLines });
 
             for (var item = 0; item < numLines; item++) {
                 data.push({
-                    item: tran_obj_ov.getSublistValue({sublistId: 'item',fieldId: 'item',line: item}),
-                    line: tran_obj_ov.getSublistValue({sublistId: 'item',fieldId: 'line',line: item}),
-                    grossamt: tran_obj_ov.getSublistValue({sublistId: 'item',fieldId: 'grossamt',line: item})
+                    item: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'item', line: item }),
+                    line: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'line', line: item }),
+                    grossamt: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'grossamt', line: item })
                 });
             }
-            log.audit({title: 'data', details: data});
+            log.audit({ title: 'data', details: data });
             return data;
         }
 

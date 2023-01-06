@@ -38,3 +38,7 @@ Thumbs.db
 
 # Project config
 project.json
+
+# archivos no insipensables
+chequeBancomer.ftl
+chequeBanorte.ftl

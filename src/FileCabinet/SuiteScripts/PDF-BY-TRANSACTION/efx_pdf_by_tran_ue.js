@@ -28,23 +28,55 @@ function(log, runtime, record, search) {
             var typeTransaction = objRecord.type;
             var scriptObj = runtime.getCurrentScript();
             var templateID = scriptObj.getParameter({name: 'custscript_id_template_pdf'});
+            var templateIDBanorte = scriptObj.getParameter({name: 'custscript_id_template_pdf_banorte'});
+            var templateIDBancomer = scriptObj.getParameter({name: 'custscript_id_template_pdf_bancomer'});
             var requiredSearch = scriptObj.getParameter({name: 'custscript_required_search'});
             var savedsearch = scriptObj.getParameter({name: 'custscript_id_saved_search'});
 
-            var status = objRecord.getValue("status");
-            log.audit({title: 'status', details: status});
-            if (scriptContext.type === scriptContext.UserEventType.VIEW && status === "Enviado") {
+            if (typeTransaction != "check") {
+                var status = objRecord.getValue("status");
+                log.audit({title: 'status', details: status});
+                if (scriptContext.type === scriptContext.UserEventType.VIEW && status === "Enviado") {
+                    log.audit({title:'cheques', details: 'caso de cheques'});
+                    log.audit({title:'account id', details: runtime.accountId});
+                    log.audit('transaction parameters', {
+                        typeTransaction: typeTransaction,
+                        templateID: templateID,
+                        templateIDBanorte: templateIDBanorte,
+                        templateIDBancomer:templateIDBancomer,
+                        recordID : objRecord.id,
+                        requiredSearch: requiredSearch,
+                        savedsearchID: savedsearch
+                    });
 
-                log.audit({title:'account id', details: runtime.accountId});
-                log.audit('transaction parameters', {typeTransaction: typeTransaction, templateID: templateID, recordID : objRecord.id, requiredSearch: requiredSearch,
-                savedsearchID: savedsearch});
+                    form.addButton({
+                        id: 'custpage_btn_pdf_template',
+                        label: 'Impresión de Remisión',
+                        functionName: 'renderButtonRemision(' + templateID + ',"' + typeTransaction + '",' + objRecord.id + ',"'+savedsearch+'",'+requiredSearch+')'
+                    });
+                    form.clientScriptModulePath = './efx_pdf_by_tran_cs.js';
+                }
+            } else {
+                log.audit({title: 'tipo', details: typeTransaction});
+                if (scriptContext.type === scriptContext.UserEventType.VIEW) {
 
-                form.addButton({
-                    id: 'custpage_btn_pdf_template',
-                    label: 'Impresión de Remisión',
-                    functionName: 'renderButton(' + templateID + ',"' + typeTransaction + '",' + objRecord.id + ',"'+savedsearch+'",'+requiredSearch+')'
-                });
-                form.clientScriptModulePath = './efx_pdf_by_tran_cs.js';
+                    log.audit({title:'cheques', details: 'caso de cheques'});
+
+                    log.audit('transaction parameters antes d eenviar a CS', {
+                        templateIDBanorte: templateIDBanorte,
+                        templateIDBancomer:templateIDBancomer,
+                        typeTransaction: typeTransaction,
+                        recordID : objRecord.id
+                    });
+
+                    log.audit({title: 'funcion del CS en UE', details: 'renderButtonCheques(' + templateIDBanorte + templateIDBancomer + ',"' + typeTransaction + '",' + objRecord.id + ')'});
+                    form.addButton({
+                        id: 'custpage_btn_pdf_template',
+                        label: 'Impresión de Cheque',
+                        functionName: 'renderButtonCheques(' + templateIDBanorte + ',' + templateIDBancomer + ',"' + typeTransaction + '",' + objRecord.id + ')'
+                    });
+                    form.clientScriptModulePath = './efx_pdf_by_tran_cs.js';
+                }
             }
         } catch (e) {
             log.error('Error on before load', e);

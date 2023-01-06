@@ -24,9 +24,11 @@ function(url, message, search) {
 
     }
 
-    function renderButton (templateID, typeRecord, recordID, savedSerachID, requiredSearch) {
+    function renderButtonRemision (templateID, typeRecord, recordID, savedSerachID, requiredSearch) {
         try {
+            console.log("templateID",templateID);
             if (templateID) {
+                console.log("typeRecord remision", typeRecord);
                 var urlResolve = url.resolveScript({
                     scriptId: 'customscript_efx_pdf_by_transaction_sl',
                     deploymentId: 'customdeploy_efx_pdf_by_transaction_sl',
@@ -39,7 +41,8 @@ function(url, message, search) {
                     }
                 });
                 window.open(urlResolve, '_blank');
-            } else {
+            }
+            else {
                 var customMsg = message.create({
                     title: "Error",
                     message: "No se encuentra configurado la plantilla para renderizar",
@@ -54,9 +57,44 @@ function(url, message, search) {
         }
     }
 
+    function renderButtonCheques (templateIDBanorte, templateIDBancomer, typeRecord, recordID){
+        try {
+            if(templateIDBanorte || templateIDBancomer ){
+                console.log("templateIDBanorte", templateIDBanorte);
+                console.log("templateIDBancomer", templateIDBancomer);
+                console.log("typeRecord cheques", typeRecord);
+                console.log("recordID", recordID);
+                var urlResolveCheques = url.resolveScript({
+                    scriptId: 'customscript_efx_pdf_by_transaction_sl',
+                    deploymentId: 'customdeploy_efx_pdf_by_transaction_sl',
+                    params: {
+                        typeRecord: typeRecord,
+                        recordID: recordID,
+                        templateIDBanorte: templateIDBanorte,
+                        templateIDBancomer: templateIDBancomer
+                    }
+                });
+                window.open(urlResolveCheques, '_blank');
+            }
+            else {
+                var customMsg = message.create({
+                    title: "Error",
+                    message: "No se encuentra configurado la plantilla para renderizar",
+                    type: message.Type.ERROR,
+                    duration: 15000
+                });
+
+                customMsg.show();
+            }
+        } catch (error) {
+
+        }
+    }
+
     return {
         pageInit: pageInit,
-        renderButton: renderButton
+        renderButtonRemision: renderButtonRemision,
+        renderButtonCheques: renderButtonCheques
     };
 
 });
