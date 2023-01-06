@@ -99,17 +99,28 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                         })
                     });
 
-                    var banco = search.lookupFields({
+                    var datosCheque = search.lookupFields({
                         type: typeRecord,
                         id: recordID,
-                        columns: 'custbody_tko_pbt_banco'
+                        columns: ['custbody_tko_pbt_banco', 'subsidiary']
                     });
+                    log.audit({title: 'datos del cheque', details: datosCheque});
 
-                    log.audit({title: 'banco', details: banco});
+                    var data = loadDataSub(datosCheque.subsidiary[0].value, datosCheque.subsidiary[0].text);
+                    var custData = {
+                        customData: data
+                    }
+                    log.audit({title: 'custData', details: custData});
 
-                    if (banco.custbody_tko_pbt_banco[0].text == "Banorte") {
+                    renderer.addCustomDataSource({
+                        alias: 'custom',
+                        format: render.DataSource.OBJECT,
+                        data: custData
+                    })
+
+                    if (datosCheque.custbody_tko_pbt_banco[0].text == "Banorte") {
                         renderer.setTemplateById(templateIDBanorte);
-                    } else if (banco.custbody_tko_pbt_banco[0].text == "Bancomer"){
+                    } else if (datosCheque.custbody_tko_pbt_banco[0].text == "Bancomer"){
                         renderer.setTemplateById(templateIDBancomer);
                     }else{
                         renderer.setTemplateById(templateID);
@@ -137,6 +148,31 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                 }
                 context.response.writePage(formError);
             }
+
+        }
+
+        function loadDataSub(idSubs, textSubs){
+            log.audit({title: 'idSubs', details: idSubs});
+            log.audit({title: 'textSubs', details: textSubs});
+            var datos = []
+            var subsidiary_record = record.load(
+                { type: record.Type.SUBSIDIARY, id: idSubs, isDynamic: true }
+            );
+            direccion = subsidiary_record.getValue({ fieldId: 'mainaddress_text' });
+            // log.audit({title: 'datos de la subsidiaria', details: direccion});
+            rfc = subsidiary_record.getSublistValue({
+                sublistId: 'taxregistration',
+                fieldId: 'taxregistrationnumber',
+                line: 0
+            });
+            log.audit({title: 'rfc', details: rfc});
+
+            datos.push({
+                dir: direccion,
+                rfc: rfc
+            });
+            log.audit({title: 'datos', details: datos});
+            return datos;
 
         }
 

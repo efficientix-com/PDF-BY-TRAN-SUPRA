@@ -26,11 +26,38 @@
         </#if>
         <macrolist>
             <macro id="nlheader">
-                <table class="header" height="110px" style="width: 100%;">
+                <table class="testing" height="110px" style="width: 100%; border-collapse:collapse; border: none;">
                     <tr>
-                        <td colspan="15" style="font-size:9px; border-bottom: 1px solid black;">
-                            <b>${record.subsidiary}</b><br />
-                            ${record.subsidiary.address}
+                        <td colspan="15">
+                            <table>
+                                <tr>
+                                    <#--  Nombre  -->
+                                    <td style="font-size:12px; padding: 0;" align="center">
+                                        <b>${record.subsidiary}</b>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <#--  Direccion  -->
+                                    <td style="font-size:9px; padding: 0;" align="center">
+                                        ${custom.customData.dir}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <#--  RFC  -->
+                                    <td style="font-size:9px; padding: 0;" align="center">
+                                        ${custom.customData.rfc}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <#--  Telefono  -->
+                                    <td style="font-size:9px; padding: 0;" align="center">
+                                        TEL: ${record.subsidiary.custrecord_efx_fe_add_phone}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+
+                        <td colspan="5">
 
                         </td>
                     </tr>
@@ -64,6 +91,11 @@
                 table {
                     font-size: 9pt;
                     table-layout: fixed;
+                }
+
+                table.testing *{
+                    /* TESTING */
+                    border: 1px solid red;
                 }
 
                 th {
