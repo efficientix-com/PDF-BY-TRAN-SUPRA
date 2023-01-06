@@ -28,7 +28,11 @@
             <macro id="nlheader">
                 <table class="header" height="110px" style="width: 100%;">
                     <tr>
-                        <td colspan="15" style="font-size:9px; border-bottom: 1px solid black;"><b> Número de transacción: </b> ${record.transactionnumber}</td>
+                        <td colspan="15" style="font-size:9px; border-bottom: 1px solid black;">
+                            <b>${record.subsidiary}</b><br />
+                            ${record.subsidiary.address}
+
+                        </td>
                     </tr>
                 </table>
             </macro>
