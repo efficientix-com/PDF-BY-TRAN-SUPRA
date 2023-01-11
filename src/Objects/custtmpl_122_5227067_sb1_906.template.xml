@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<pdf>
+
+    <head>
+        <link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+        <#if .locale=="zh_CN">
+            <link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+            <#elseif .locale=="zh_TW">
+                <link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+            <#elseif .locale=="ja_JP">
+                <link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+            <#elseif .locale=="ko_KR">
+                <link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+            <#elseif .locale=="th_TH">
+                <link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+        </#if>
+        <style type="text/css">
+            table.testing * {
+                /* TESTING */
+                border: 1px solid red;
+            }
+        </style>
+    </head>
+
+    <body header="nlheader" header-height="13%" padding="6mm 6mm 6mm 6mm" size="Letter">
+        <#--  Memebrete de cheque  -->
+        <table style="padding: 0.1in 0.1in 0.1in 1.55in" width="100%">
+            <tr>
+
+                <td width="80%" align="right" style="">
+                    <p style="font-size: 7pt; vertical-align: bottom;padding: 0 0 0 0.3in; margin-top: 60px">
+                        <b>
+                            ${record.trandate}
+                        </b>
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" align="left" height="60px">
+                    <p style="font-size: 7pt; vertical-align: bottom;padding: 0 0 0 0.6in">
+                        <b>
+                            ${record.entity}
+                        </b>
+                    </p>
+                </td>
+
+                <td align="center" width="27%">
+                    <p style="font-size: 7pt; vertical-align: bottom; padding-left:0.2in;">
+                        ${record.total?keep_after("$")}
+                    </p>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="3" style="font-size:7pt;vertical-align: bottom; margin-top: 10px;"><b>(${record.totalwords})</b></td>
+            </tr>
+
+        </table>
+
+    </body>
+</pdf>

@@ -1,0 +1,9 @@
+<advancedpdftemplate scriptid="custtmpl_122_5227067_sb1_906" standard="STDTMPLUKCHECK">
+  <description></description>
+  <displaysourcecode>F</displaysourcecode>
+  <isinactive>F</isinactive>
+  <preferred>F</preferred>
+  <printtype>TRANSACTION</printtype>
+  <title>TKO - Cheque Template Bancomer</title>
+  <trantype>CHECK</trantype>
+</advancedpdftemplate>
