@@ -64,7 +64,7 @@
 
                                 <tr>
                                     <td colspan="5" style="font-size:9px; padding: 4px;"><strong>Serie: </strong>${record.custbody_mx_cfdi_serie}</td>
-                                    <td colspan="5" style="font-size:9px; padding: 4px;"><strong>Folio: </strong>${record.custbody_mx_cfdi_folio}</td>
+                                    <td colspan="5" style="font-size:9px; padding: 4px;"><strong>Folio: </strong>${record.tranid}</td>
                                 </tr>
 
                                 <tr>
@@ -296,9 +296,10 @@
                     <th align="center" colspan="2" style="font-size: 4pt; padding-left: 0px; padding-right: 0px;">Unidad</th>
                     <th align="center" colspan="3" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Clave SAT</th>
                     <th align="center" colspan="10" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Clave</th>
+                    <th align="center" colspan="10" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Nombre</th>
                     <th align="center" colspan="8" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Descripcion</th>
                     <th align="center" colspan="5" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">UPC</th>
-                    <#if record.custbody_tko_pdf_by_tran_costos == "T">
+                    <#if record.custbody_tko_pdf_by_tran_costos == true>
                         <th align="center" colspan="4" style="font-size: 5pt; padding-left: 0px; padding-right: 0px;">Importe</th>
                     </#if>
                 </tr>
@@ -311,9 +312,10 @@
                             <td align="center" colspan="2" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.unitsdisplay}</td>
                             <td align="center" colspan="3" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.custcol_mx_txn_line_sat_item_code?keep_before(" ")}</td>
                             <td align="center" colspan="10" style="font-size: 5pt; padding-top: 4px;">${item.item?keep_before(" ")}</td>
+                            <td align="center" colspan="10" style="font-size: 5pt; padding-top: 4px;">${item.custcol_tkio_nombre_mostrar}</td>
                             <td align="center" colspan="8" style="font-size: 5pt; padding-top: 4px;">${item.description}</td>
                             <td align="center" colspan="5" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.custcol_efx_fe_upc_code}</td>
-                            <#if record.custbody_tko_pdf_by_tran_costos == "T">
+                            <#if record.custbody_tko_pdf_by_tran_costos == true>
                                 <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.grossamt}</td>
                             </#if>
                         </tr>

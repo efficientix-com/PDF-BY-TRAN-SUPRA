@@ -1,236 +1,49 @@
-<?xml version="1.0"?>
-<!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
+<?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
 <pdf>
-
     <head>
         <link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
-        <#if .locale=="zh_CN">
+        <#if .locale == "zh_CN">
             <link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
-            <#elseif .locale=="zh_TW">
-                <link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
-            <#elseif .locale=="ja_JP">
-                <link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
-            <#elseif .locale=="ko_KR">
-                <link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
-            <#elseif .locale=="th_TH">
-                <link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+        <#elseif .locale == "zh_TW">
+            <link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+        <#elseif .locale == "ja_JP">
+            <link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+        <#elseif .locale == "ko_KR">
+            <link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+        <#elseif .locale == "th_TH">
+            <link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
         </#if>
+
         <style type="text/css">
-        table.testing * {
-            /* TESTING */
-            border: 1px solid red;
-        }
-
-        table.conceptos {
-            border: 1px solid black;
-        }
-
-        table.datos_cuentas th {
-            align: center;
-            border-top: 1px solid black;
-            border-bottom: 1px solid black;
-        }
-
-        table.tabla_footer {
-            border: 1px solid black
-        }
-
-        table.tabla_footer th {
-            align: center;
-            border-bottom: 1px solid black;
-        }
+            table.testing * {
+                /* TESTING */
+                border: 1px solid red;
+            }
         </style>
     </head>
-
-    <body header="nlheader" header-height="13%" padding="6mm 6mm 6mm 6mm" size="Letter">
+    <body header="nlheader"  size="Letter">
         <#--  Memebrete de cheque  -->
-        <table style="padding: 0.1in 0.1in 0.1in 1.55in" width="100%">
+        <table class="testing" width="100%">
             <tr>
-                <td align="center" >
+                <td>
+                    &nbsp;
                 </td>
-            </tr>
-
-            <tr>
-                <td width="60%"></td>
-                <td width="50%" align="right" style="">
-                    <p style="font-size: 7pt; vertical-align: bottom;padding: 0 0 0 0.3in; margin-top: 30px;">
-                        <b>
-                            ${record.trandate}
-                        </b>
-                    </p>
+                <td>
+                    &nbsp;
                 </td>
+                <td align="center" style="margin-top: 15px; "><span style="font-size:9px;"><b>${record.trandate}</b></span></td>
             </tr>
             <tr>
-                <td colspan="2" align="left" height="50px">
-                    <p style="font-size: 7pt; vertical-align: bottom;padding: 0 0 0 0.6in">
-                        <b>
-                            ${record.entity}
-                        </b>
-                    </p>
+                <td align="left" colspan="2" height="60px" style="margin-left: 125px;">
+                    <p style="font-size: 7pt; vertical-align: bottom;"><b>${record.entity} </b></p>
                 </td>
-                <td colspan="3"></td>
-                <td align="right" width="25%">
-                    <p style="font-size: 7pt; vertical-align: bottom; padding-left:0.2in">
-                        ${record.total?keep_after("$")}
-                    </p>
+                <td width="27%">
+                    <#assign total = record.total?keep_after("$")>
+                    <p style="font-size: 7pt; vertical-align: bottom; margin-left: 30px;">${total}</p>
                 </td>
             </tr>
             <tr>
-                <td colspan="3" style="font-size:7pt;vertical-align: bottom; margin-top: 30px;"><b>(${record.totalwords})</b></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td style="font-size:7pt"></td>
-                <td style=""></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td style="font-size:7pt;vertical-align: top" align="center"><b></b></td>
-            </tr>
-            <tr>
-                <td></td>
-                <td></td>
-                <td></td>
-            </tr>
-        </table>
-
-        <#--  Tablas custom  -->
-        <table style="margin-top:105px;width:100%;">
-            <tr>
-                <td style="width: 533px;" >
-                    <table class="conceptos"  width="100%">
-                        <tr>
-                            <th align="center" style="font-size: 11px; border-bottom: 1px solid black; width: 548px;">CONCEPTOS DE PAGO</th>
-                        </tr>
-                        <tr>
-                            <td height="60px">&nbsp;</td>
-                        </tr>
-                    </table>
-                </td>
-                <td style="width: 74px;" width="30px">&nbsp;</td>
-                <td style="width: 184px;">
-                    <table class="conceptos" width="100%">
-                        <tr>
-                            <th align="center" style="font-size: 11px; border-bottom: 1px solid black">FIRMA CHEQUE RECIBIDO</th>
-                        </tr>
-                        <tr>
-                            <td height="60px">&nbsp;</td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        </table>
-
-        <table class="datos_cuentas" width="100%" style=" margin-top:10px;font-size: 11px;">
-            <tr>
-                <th colspan="1" style="border-right: 1px solid black; border-left: 1px solid black;">
-                    CUENTA
-                </th>
-                <th colspan="1" style="border-right: 1px solid black;">
-                    SUB-CTA.
-                </th>
-                <th colspan="1" style="border-right: 1px solid black;">
-                    S.S CTA.
-                </th>
-                <th colspan="3" style="border-right: 1px solid black;">
-                    CC
-                </th>
-                <th colspan="8" style="border-right: 1px solid black;">
-                    CONCEPTO
-                </th>
-                <th colspan="4" style="border-right: 1px solid black;">
-                    PARCIAL
-                </th>
-                <th colspan="4" style="border-right: 1px solid black;">
-                    DEBE
-                </th>
-                <th colspan="4" style="border-right: 1px solid black;">
-                    HABER
-                </th>
-            </tr>
-
-            <tr>
-                <td colspan="1" height="235px" style=" border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-                <td colspan="1" height="235px" style="border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-                <td colspan="1" height="235px" style="border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-                <td colspan="3" height="235px" style="border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-                <td colspan="8" height="235px" style="border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-                <td colspan="4" height="235px" style="border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-                <td colspan="4" height="235px" style="border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-                <td colspan="4" height="235px" style=" border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-            </tr>
-
-            <tr>
-                <td align="right" colspan="18" height="30px" style="border-right: 1px solid black;">
-                    SUMAS IGUALES
-                </td>
-                <td align="right" colspan="4" height="30px" style="border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-                <td align="right" colspan="4" height="30px" style="border-right: 1px solid black; border-bottom: 1px solid black;">
-                    &nbsp;
-                </td>
-            </tr>
-        </table>
-
-        <table class="tabla_footer" width="100%" style=" margin-top:5px;font-size: 11px;">
-            <tr>
-                <th style="border-right: 1px solid black; ">
-                    HECHO POR:
-                </th>
-                <th style="border-right: 1px solid black; ">
-                    REVISADO:
-                </th>
-                <th style="border-right: 1px solid black; ">
-                    AUTORIZADO:
-                </th>
-                <th style="border-right: 1px solid black; ">
-                    HECHO AUXILIARES:
-                </th>
-                <th style="border-right: 1px solid black; ">
-                    DIARIO
-                </th>
-                <th >
-                    No. CHEQUE POLIZA
-                </th>
-            </tr>
-
-            <tr>
-                <td height="40px" style="border-right: 1px solid black; ">
-                    &nbsp;
-                </td>
-                <td height="40px" style="border-right: 1px solid black; ">
-                    &nbsp;
-                </td>
-                <td height="40px" style="border-right: 1px solid black; ">
-                    &nbsp;
-                </td>
-                <td height="40px" style="border-right: 1px solid black; ">
-                    &nbsp;
-                </td>
-                <td height="40px" style="border-right: 1px solid black; ">
-                    &nbsp;
-                </td>
-                <td height="40px">
-                    &nbsp;
-                </td>
+                <td colspan="3" style="font-size:7pt;vertical-align: bottom; margin-top: 10px; margin-left: 50px;"><b>(${record.totalwords})</b></td>
             </tr>
         </table>
     </body>
