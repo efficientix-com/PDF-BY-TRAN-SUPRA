@@ -28,34 +28,56 @@ function(log, runtime, record, search) {
             var typeTransaction = objRecord.type;
             var scriptObj = runtime.getCurrentScript();
             var templateID = scriptObj.getParameter({name: 'custscript_id_template_pdf'});
+            var generic_templateID = scriptObj.getParameter({name: 'custscript_id_generic_template_pdf'});
             var templateIDBanorte = scriptObj.getParameter({name: 'custscript_id_template_pdf_banorte'});
             var templateIDBancomer = scriptObj.getParameter({name: 'custscript_id_template_pdf_bancomer'});
             var requiredSearch = scriptObj.getParameter({name: 'custscript_required_search'});
             var savedsearch = scriptObj.getParameter({name: 'custscript_id_saved_search'});
 
             if (typeTransaction != "check") {
-                var status = objRecord.getValue("status");
-                log.audit({title: 'status', details: status});
-                if (scriptContext.type === scriptContext.UserEventType.VIEW && status === "Enviado") {
-                    log.audit({title:'cheques', details: 'caso de cheques'});
-                    log.audit({title:'account id', details: runtime.accountId});
-                    log.audit('transaction parameters', {
-                        typeTransaction: typeTransaction,
-                        templateID: templateID,
-                        templateIDBanorte: templateIDBanorte,
-                        templateIDBancomer:templateIDBancomer,
-                        recordID : objRecord.id,
-                        requiredSearch: requiredSearch,
-                        savedsearchID: savedsearch
-                    });
+                log.audit({title: 'typeTransaction', details: typeTransaction});
+                if (typeTransaction == "itemfulfillment") {
+                    var status = objRecord.getValue("status");
+                    log.audit({title: 'status', details: status});
+                    if (scriptContext.type === scriptContext.UserEventType.VIEW && status === "Enviado") {
+                        log.audit({title:'cheques', details: 'caso de cheques'});
+                        log.audit({title:'account id', details: runtime.accountId});
+                        log.audit('transaction parameters', {
+                            typeTransaction: typeTransaction,
+                            templateID: templateID,
+                            generic_templateID:generic_templateID,
+                            templateIDBanorte: templateIDBanorte,
+                            templateIDBancomer:templateIDBancomer,
+                            recordID : objRecord.id,
+                            requiredSearch: requiredSearch,
+                            savedsearchID: savedsearch
+                        });
 
-                    form.addButton({
-                        id: 'custpage_btn_pdf_template',
-                        label: 'Impresión de Remisión',
-                        functionName: 'renderButtonRemision(' + templateID + ',"' + typeTransaction + '",' + objRecord.id + ',"'+savedsearch+'",'+requiredSearch+')'
-                    });
-                    form.clientScriptModulePath = './efx_pdf_by_tran_cs.js';
+                        form.addButton({
+                            id: 'custpage_btn_pdf_template',
+                            label: 'Impresión de Remisión',
+                            functionName: 'renderButtonRemision(' + templateID + ',"' + typeTransaction + '",' + objRecord.id + ',"'+savedsearch+'",'+requiredSearch+')'
+                        });
+                    }
+                }else{
+                    // ? Escenario para transacciones varias
+                    if (scriptContext.type == scriptContext.UserEventType.VIEW) {
+                        log.audit('transaction parameters', {
+                            typeTransaction: typeTransaction,
+                            generic_templateID:generic_templateID,
+                            recordID : objRecord.id,
+                            requiredSearch: requiredSearch,
+                            savedsearchID: savedsearch
+                        });
+
+                        form.addButton({
+                            id: 'custpage_btn_pdf_template',
+                            label: 'Impresión de PDF',
+                            functionName: 'renderButtonGeneric(' + generic_templateID + ',"' + typeTransaction + '",' + objRecord.id + ',"'+savedsearch+'",'+requiredSearch+')'
+                        });
+                    }
                 }
+                form.clientScriptModulePath = './efx_pdf_by_tran_cs.js';
             } else {
                 log.audit({title: 'tipo', details: typeTransaction});
                 if (scriptContext.type === scriptContext.UserEventType.VIEW) {

@@ -53,7 +53,7 @@ function(url, message, search) {
                 customMsg.show();
             }
         } catch (e) {
-
+            log.error({title: 'Error en renderButtonRemision', details: e})
         }
     }
 
@@ -91,10 +91,44 @@ function(url, message, search) {
         }
     }
 
+    function renderButtonGeneric(generic_templateID, typeRecord, recordID, savedSerachID, requiredSearch){
+        try {
+            console.log("generic_templateID",generic_templateID);
+            if (generic_templateID) {
+                console.log("typeRecord ", typeRecord);
+                var urlResolve = url.resolveScript({
+                    scriptId: 'customscript_efx_pdf_by_transaction_sl',
+                    deploymentId: 'customdeploy_efx_pdf_by_transaction_sl',
+                    params: {
+                        generic_templateID: generic_templateID,
+                        typeRecord: typeRecord,
+                        recordID: recordID,
+                        savedSearch: savedSerachID,
+                        requiredSearch: requiredSearch
+                    }
+                });
+                window.open(urlResolve, '_blank');
+            }
+            else {
+                var customMsg = message.create({
+                    title: "Error",
+                    message: "No se encuentra configurado la plantilla para renderizar, favor de revisar el despliegue del script.",
+                    type: message.Type.ERROR,
+                    duration: 15000
+                });
+
+                customMsg.show();
+            }
+        } catch (e) {
+            log.error({title: 'Error en renderButtonRemision', details: e})
+        }
+    }
+
     return {
         pageInit: pageInit,
         renderButtonRemision: renderButtonRemision,
-        renderButtonCheques: renderButtonCheques
+        renderButtonCheques: renderButtonCheques,
+        renderButtonGeneric: renderButtonGeneric
     };
 
 });

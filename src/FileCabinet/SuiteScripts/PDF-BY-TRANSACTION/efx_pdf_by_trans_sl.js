@@ -27,15 +27,28 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                 var request = context.request, params = request.parameters, response = context.response;
                 var typeRecord = params.typeRecord;
 
+                // Recepcion de parametros
                 if (typeRecord != "check") {
-                    var templateID = params.templateID, recordID = params.recordID;
-                    log.audit('params data remision', {
-                        templateID: templateID,
-                        templateIDBanorte: templateIDBanorte,
-                        templateIDBancomer: templateIDBancomer,
-                        recordID: recordID,
-                        typeRecord: typeRecord
-                    });
+                    if (typeRecord == "itemfulfillment") {
+                        var templateID = params.templateID, recordID = params.recordID, savedSearch = params.savedSearch, requiredSearch = params.requiredSearch;;
+                        log.audit('remision params data', {
+                            templateID: templateID,
+                            recordID: recordID,
+                            typeRecord: typeRecord,
+                            savedSearch: savedSearch,
+                            requiredSearch: requiredSearch
+                        });
+                    }else{
+                        var generic_templateID = params.generic_templateID, recordID = params.recordID, savedSearch = params.savedSearch, requiredSearch = params.requiredSearch;;
+                        log.audit('generic params data', {
+                            generic_templateID: generic_templateID,
+                            recordID: recordID,
+                            typeRecord: typeRecord,
+                            savedSearch: savedSearch,
+                            requiredSearch: requiredSearch
+                        });
+
+                    }
                 } else {
                     var templateIDBanorte = params.templateIDBanorte, templateIDBancomer = params.templateIDBancomer, recordID = params.recordID;
                     log.audit('params data cheques', {
@@ -44,52 +57,124 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                         recordID: recordID,
                         typeRecord: typeRecord
                     });
-
                 }
 
                 log.audit({ title: 'recordID', details: recordID });
                 log.audit({ title: 'typeRecord', details: typeRecord });
-                if (typeRecord != "check") {
-                    var renderer = render.create();
-                    renderer.setTemplateById(templateID);
 
-                    var tran_obj = record.load({
-                        type: typeRecord,
-                        id: recordID
-                    });
+                if (requiredSearch == false || requiredSearch == "false") {
+                    if (typeRecord != "check") {
+                        if (typeRecord == "itemfulfillment") {
+                            var renderer = render.create();
+                            renderer.setTemplateById(templateID);
 
-                    var tran_st = JSON.stringify(tran_obj);
-                    var tran = JSON.parse(tran_st);
-                    log.audit({ title: 'tran', details: tran });
+                            var tran_obj = record.load({
+                                type: typeRecord,
+                                id: recordID
+                            });
 
-                    var idCreated = tran_obj.getValue("createdfrom");
-                    log.audit({ title: 'idCreated', details: idCreated });
+                            var tran_st = JSON.stringify(tran_obj);
+                            var tran = JSON.parse(tran_st);
+                            log.audit({ title: 'tran', details: tran });
 
-                    var OVdata = loadODV(idCreated);
-                    var customData = {
-                        odvdata: OVdata
-                    }
+                            var idCreated = tran_obj.getValue("createdfrom");
+                            log.audit({ title: 'idCreated', details: idCreated });
 
-                    renderer.addRecord({
-                        templateName: 'record',
-                        record: tran_obj,
-                    });
-                    renderer.addCustomDataSource({
-                        alias: 'custom',
-                        format: render.DataSource.OBJECT,
-                        data: customData
-                    });
+                            var OVdata = loadODV(idCreated);
+                            var customData = {
+                                odvdata: OVdata
+                            }
 
-                    log.audit({ title: 'customData', details: JSON.stringify(customData) });
-                    var transactionFile = renderer.renderAsPdf();
+                            renderer.addRecord({
+                                templateName: 'record',
+                                record: tran_obj,
+                            });
+                            renderer.addCustomDataSource({
+                                alias: 'custom',
+                                format: render.DataSource.OBJECT,
+                                data: customData
+                            });
 
-                    if (transactionFile) {
-                        response.writeFile({
-                            file: transactionFile,
-                            isInline: true
+                            log.audit({ title: 'customData', details: JSON.stringify(customData) });
+                            var transactionFile = renderer.renderAsPdf();
+
+                            if (transactionFile) {
+                                response.writeFile({
+                                    file: transactionFile,
+                                    isInline: true
+                                });
+                            }
+
+                        }else{
+                            var renderer = render.create();
+                            renderer.addRecord({
+                                templateName: 'record',
+                                record: record.load({
+                                    type: typeRecord,
+                                    id: recordID
+                                })
+                            });
+
+                            renderer.setTemplateById(generic_templateID);
+                            var transactionFile = renderer.renderAsPdf();
+
+                            if (transactionFile) {
+                                response.writeFile({
+                                    file: transactionFile,
+                                    isInline: true
+                                });
+                            }
+                        }
+
+                    } else {
+                        var renderer = render.create();
+                        renderer.addRecord({
+                            templateName: 'record',
+                            record: record.load({
+                                type: typeRecord,
+                                id: recordID
+                            })
                         });
+
+                        var datosCheque = search.lookupFields({
+                            type: typeRecord,
+                            id: recordID,
+                            columns: ['custbody_tko_pbt_banco', 'subsidiary']
+                        });
+                        log.audit({ title: 'datos del cheque', details: datosCheque });
+
+                        var data = loadDataSub(datosCheque.subsidiary[0].value, datosCheque.subsidiary[0].text);
+                        var custData = {
+                            customData: data
+                        }
+                        log.audit({ title: 'custData', details: custData });
+
+                        renderer.addCustomDataSource({
+                            alias: 'custom',
+                            format: render.DataSource.OBJECT,
+                            data: custData
+                        })
+
+                        if (datosCheque.custbody_tko_pbt_banco[0].text == "Banorte") {
+                            renderer.setTemplateById(templateIDBanorte);
+                        } else if (datosCheque.custbody_tko_pbt_banco[0].text == "Bancomer") {
+                            renderer.setTemplateById(templateIDBancomer);
+                        } else {
+                            renderer.setTemplateById(templateID);
+                        }
+
+                        var transactionFile = renderer.renderAsPdf();
+
+                        if (transactionFile) {
+                            response.writeFile({
+                                file: transactionFile,
+                                isInline: true
+                            });
+                        }
                     }
                 } else {
+                    log.audit({ title: 'requiredSearch', details: requiredSearch });
+                    log.audit({title: 'savedSearch', details: savedSearch});
                     var renderer = render.create();
                     renderer.addRecord({
                         templateName: 'record',
@@ -99,16 +184,25 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                         })
                     });
 
-                    var datosCheque = search.lookupFields({
-                        type: typeRecord,
-                        id: recordID,
-                        columns: ['custbody_tko_pbt_banco', 'subsidiary']
+                    var searchLoad = search.load({ id: savedSearch });
+                    var filters = searchLoad.filters;
+                    log.audit({title: 'filters', details: filters});
+                    var custom_filters = search.createFilter({
+                        name: 'internalid',
+                        operator: search.Operator.IS,
+                        values: recordID
                     });
-                    log.audit({title: 'datos del cheque', details: datosCheque});
+                    filters.push(custom_filters);
+                    log.audit({title: 'custom_filters', details: custom_filters});
+                    searchLoad.filters = filters;
+                    log.audit({title: 'filtros customizados', details: searchLoad.filters});
 
-                    var data = loadDataSub(datosCheque.subsidiary[0].value, datosCheque.subsidiary[0].text);
+                    var run_search = searchLoad.run();
+                    var results = run_search.getRange(0, 1000);
+                    log.audit({title: 'results', details: results});
+
                     var custData = {
-                        customData: data
+                        customData: results
                     }
                     log.audit({title: 'custData', details: custData});
 
@@ -116,23 +210,20 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                         alias: 'custom',
                         format: render.DataSource.OBJECT,
                         data: custData
-                    })
-
-                    if (datosCheque.custbody_tko_pbt_banco[0].text == "Banorte") {
-                        renderer.setTemplateById(templateIDBanorte);
-                    } else if (datosCheque.custbody_tko_pbt_banco[0].text == "Bancomer"){
-                        renderer.setTemplateById(templateIDBancomer);
-                    }else{
-                        renderer.setTemplateById(templateID);
-                    }
+                    });
+                    /* renderer.addSearchResults({
+                        templateName: 'results',
+                        searchResult: results
+                    }); */
+                    // !Aqui va el id del parametro de PDF generico
+                    renderer.setTemplateById(generic_templateID);
 
                     var transactionFile = renderer.renderAsPdf();
-
                     if (transactionFile) {
                         response.writeFile({
                             file: transactionFile,
                             isInline: true
-                        });
+                        })
                     }
                 }
             } catch (e) {
@@ -141,7 +232,10 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                     title: ' '
                 });
                 if (typeRecord != "check") {
-                    formError.clientScriptModulePath = './efx_pdf_by_tran_error_cs.js';
+                    if (typeRecord == "itemfulfillment") {
+                        formError.clientScriptModulePath = './efx_pdf_by_tran_error_cs.js';
+                    }
+                    formError.clientScriptModulePath = './efx_pdf_by_tran_generic_error_cs.js';
                 } else {
                     formError.clientScriptModulePath = './efx_pdf_by_tran_error_cs_cheques.js';
 
@@ -151,9 +245,9 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
 
         }
 
-        function loadDataSub(idSubs, textSubs){
-            log.audit({title: 'idSubs', details: idSubs});
-            log.audit({title: 'textSubs', details: textSubs});
+        function loadDataSub(idSubs, textSubs) {
+            log.audit({ title: 'idSubs', details: idSubs });
+            log.audit({ title: 'textSubs', details: textSubs });
             var datos = []
             var subsidiary_record = record.load(
                 { type: record.Type.SUBSIDIARY, id: idSubs, isDynamic: true }
@@ -165,13 +259,13 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                 fieldId: 'taxregistrationnumber',
                 line: 0
             });
-            log.audit({title: 'rfc', details: rfc});
+            log.audit({ title: 'rfc', details: rfc });
 
             datos.push({
                 dir: direccion,
                 rfc: rfc
             });
-            log.audit({title: 'datos', details: datos});
+            log.audit({ title: 'datos', details: datos });
             return datos;
 
         }
