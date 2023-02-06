@@ -37,7 +37,7 @@
                             </#if>
                         </td>
 
-
+                        <#--  Datos empresa  -->
                         <td colspan="7" align="center" style="font-size: 8px;">
                             <table style="width: 100%">
                                 <tr>
@@ -57,6 +57,7 @@
                             </table>
                         </td>
 
+                        <#--  Tabla de cabecera (derecha)  -->
                         <td colspan="4" style="font-size: 10px;" align="right">
                             <table style="width: 100%; border: 1px solid black;">
                                 <tr>
@@ -254,6 +255,7 @@
         </style>
     </head>
     <body header="nlheader" header-height="13%" footer="nlfooter" footer-height="20pt"  size="Letter">
+        <#--  Datos emisor y receptor  -->
         <table  style="width: 100%; margin-top: 10px; border-bottom: 1px solid black">
             <tr>
                 <td colspan="10" style="font-size:9px;" align="left">
@@ -290,6 +292,7 @@
 
         </table>
 
+        <#--  Tabla de items  -->
         <table style="width: 100%; margin-top:3px;">
             <thead>
                 <tr style="border-bottom: 1px solid black; margin-top: 0px; padding-top:0px; padding-bottom: 3px;">
