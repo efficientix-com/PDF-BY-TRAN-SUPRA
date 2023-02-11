@@ -312,7 +312,7 @@
                 <#list custom.odvdata as item_ns>
                     <#if item.orderline == item_ns.line>
                         <tr>
-                            <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.itemquantity}</td>
+                            <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.quantity}</td>
                             <td align="center" colspan="2" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.unitsdisplay}</td>
                             <td align="center" colspan="3" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.custcol_mx_txn_line_sat_item_code?keep_before(" ")}</td>
                             <td align="center" colspan="10" style="font-size: 5pt; padding-top: 4px;">${item.item?keep_before(" ")}</td>
@@ -320,7 +320,14 @@
                             <td align="center" colspan="8" style="font-size: 5pt; padding-top: 4px;">${item.description}</td>
                             <td align="center" colspan="5" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.custcol_efx_fe_upc_code}</td>
                             <#if record.custbody_tko_pdf_by_tran_costos == true>
-                                <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.grossamt}</td>
+                                <#assign cantidad_IF = item.quantity>
+                                <#assign cantidad_odv = item.quantityremaining>
+                                <#if cantidad_IF != cantidad_odv>
+                                    <#assign monto = item_ns.grossamt?number * cantidad_IF?number>
+                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.grossamt} * ${cantidad_IF} = ${monto}</td>
+                                <#else>
+                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.grossamt}</td>
+                                </#if>
                             </#if>
                         </tr>
                     </#if>

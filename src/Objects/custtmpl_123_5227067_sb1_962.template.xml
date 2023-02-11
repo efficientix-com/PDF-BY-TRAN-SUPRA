@@ -17,7 +17,7 @@
         <style type="text/css">
             table.testing * {
                 /* TESTING */
-                border: 1px solid red;
+                border: 1px solid white;
             }
         </style>
     </head>
@@ -34,16 +34,16 @@
                 <td align="center" style="margin-top: 15px; "><span style="font-size:9px;"><b>${record.trandate}</b></span></td>
             </tr>
             <tr>
-                <td align="left" colspan="2" height="60px" style="margin-left: 125px;">
+                <td align="left" colspan="2" height="50px" style="margin-left: 125px;">
                     <p style="font-size: 7pt; vertical-align: bottom;"><b>${record.entity} </b></p>
                 </td>
-                <td width="27%">
+                <td width="27%" align="center">
                     <#assign total = record.total?keep_after("$")>
-                    <p style="font-size: 7pt; vertical-align: bottom; margin-left: 30px;">${total}</p>
+                    <p style="font-size: 7pt; vertical-align: bottom; margin-left: 30px; margin-top: 10px;">${total}</p>
                 </td>
             </tr>
             <tr>
-                <td colspan="3" style="font-size:7pt;vertical-align: bottom; margin-top: 10px; margin-left: 50px;"><b>(${record.totalwords})</b></td>
+                <td colspan="3" style="font-size:7pt;vertical-align: bottom; margin-top: 20px; margin-left: 50px;"><b>(${record.totalwords})</b></td>
             </tr>
         </table>
     </body>
