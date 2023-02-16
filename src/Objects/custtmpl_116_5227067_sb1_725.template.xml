@@ -323,8 +323,9 @@
                                 <#assign cantidad_IF = item.quantity>
                                 <#assign cantidad_odv = item.quantityremaining>
                                 <#if cantidad_IF != cantidad_odv>
-                                    <#assign monto = item_ns.grossamt?number * cantidad_IF?number>
-                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.grossamt} * ${cantidad_IF} = ${monto}</td>
+                                    <#assign monto = item_ns.rate?number * cantidad_IF?number>
+                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${monto}</td>
+                                    <#--  <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.rate} * ${cantidad_IF} = ${monto}</td>  -->
                                 <#else>
                                     <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.grossamt}</td>
                                 </#if>
