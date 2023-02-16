@@ -1,84 +1,46 @@
 <?xml version="1.0"?><!DOCTYPE pdf PUBLIC "-//big.faceless.org//report" "report-1.1.dtd">
 <pdf>
-    <#setting locale = "es_MX">
-    <#setting time_zone= "America/Mexico_City">
-    <#setting number_format=",##0.00">
-
-    <head>
-        <link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}"
-              src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}"
-              src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2"/>
-        <#if .locale == "zh_CN">
-            <link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}"
-                  src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2"/>
-        <#elseif .locale == "zh_TW">
-            <link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}"
-                  src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2"/>
-        <#elseif .locale == "ja_JP">
-            <link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}"
-                  src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2"/>
-        <#elseif .locale == "ko_KR">
-            <link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}"
-                  src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2"/>
-        <#elseif .locale == "th_TH">
-            <link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}"
-                  src-bold="${nsfont.NotoSansThai_Bold}" bytes="2"/>
-        </#if>
-        <macrolist>
-            <macro id="nlheader">
-                <table class="testing" height="110px" style="width: 100%; border-collapse:collapse; border: none;">
-                    <tr>
-                        <td colspan="15">
-                            <table>
-                                <tr>
-                                    <#--  Nombre  -->
-                                    <td style="font-size:12px; padding: 0;" align="center">
-                                        <b>${record.subsidiary}</b>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <#--  Direccion  -->
-                                    <td style="font-size:9px; padding: 0;" align="center">
-                                        ${custom.customData.dir}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <#--  RFC  -->
-                                    <td style="font-size:9px; padding: 0;" align="center">
-                                        ${custom.customData.rfc}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <#--  Telefono  -->
-                                    <td style="font-size:9px; padding: 0;" align="center">
-                                        TEL: ${record.subsidiary.custrecord_efx_fe_add_phone}
-                                    </td>
-                                </tr>
-                            </table>
-                        </td>
-
-                        <td colspan="5">
-
-                        </td>
-                    </tr>
-                </table>
-            </macro>
-
-            <macro id="nlfooter">
-                <table class="footer" style="width: 100%;">
-                    <tr>
-                        <td style="font-size: 6pt; text-align:left;">ESTE DOCUMENTO ES UNA REPRESENTACIÓN FISICA DE UNA TRANSACCIÓN DE REMISIÓN.</td>
-                        <td align="right">
-                            <pagenumber/>
-                            de
-                            <totalpages/>
-                        </td>
-                    </tr>
-                </table>
-            </macro>
-        </macrolist>
-        <style type="text/css">
-            * {
+<head>
+	<link name="NotoSans" type="font" subtype="truetype" src="${nsfont.NotoSans_Regular}" src-bold="${nsfont.NotoSans_Bold}" src-italic="${nsfont.NotoSans_Italic}" src-bolditalic="${nsfont.NotoSans_BoldItalic}" bytes="2" />
+	<#if .locale == "zh_CN">
+		<link name="NotoSansCJKsc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKsc_Regular}" src-bold="${nsfont.NotoSansCJKsc_Bold}" bytes="2" />
+	<#elseif .locale == "zh_TW">
+		<link name="NotoSansCJKtc" type="font" subtype="opentype" src="${nsfont.NotoSansCJKtc_Regular}" src-bold="${nsfont.NotoSansCJKtc_Bold}" bytes="2" />
+	<#elseif .locale == "ja_JP">
+		<link name="NotoSansCJKjp" type="font" subtype="opentype" src="${nsfont.NotoSansCJKjp_Regular}" src-bold="${nsfont.NotoSansCJKjp_Bold}" bytes="2" />
+	<#elseif .locale == "ko_KR">
+		<link name="NotoSansCJKkr" type="font" subtype="opentype" src="${nsfont.NotoSansCJKkr_Regular}" src-bold="${nsfont.NotoSansCJKkr_Bold}" bytes="2" />
+	<#elseif .locale == "th_TH">
+		<link name="NotoSansThai" type="font" subtype="opentype" src="${nsfont.NotoSansThai_Regular}" src-bold="${nsfont.NotoSansThai_Bold}" bytes="2" />
+	</#if>
+    <macrolist>
+        <macro id="nlheader">
+            <table class="testing" height="110px" style="width: 100%; border-collapse:collapse; border: none;"><tr>
+	<td colspan="15">
+	<table><tr><#--  Nombre  -->
+		<td align="center" style="font-size:12px; padding: 0;"><b>${record.subsidiary}</b></td>
+		</tr>
+		<tr><#--  Direccion  -->
+		<td align="center" style="font-size:9px; padding: 0;">${custom.customData.dir}</td>
+		</tr>
+		<tr><#--  RFC  -->
+		<td align="center" style="font-size:9px; padding: 0;">${custom.customData.rfc}</td>
+		</tr>
+		<tr><#--  Telefono  -->
+		<td align="center" style="font-size:9px; padding: 0;">TEL: ${record.subsidiary.custrecord_efx_fe_add_phone}</td>
+		</tr></table>
+	</td>
+	<td colspan="5">&nbsp;</td>
+	</tr></table>
+        </macro>
+        <macro id="nlfooter">
+            <table class="footer" style="width: 100%;"><tr>
+	<td style="font-size: 6pt; text-align:left;">ESTE DOCUMENTO ES UNA REPRESENTACI&Oacute;N FISICA DE UNA TRANSACCI&Oacute;N DE REMISI&Oacute;N.</td>
+	<td align="right"><pagenumber/> de <totalpages/></td>
+	</tr></table>
+        </macro>
+    </macrolist>
+    <style type="text/css">* {
                 <#if .locale == "zh_CN"> font-family: NotoSans, NotoSansCJKsc, sans-serif;
                 <#elseif .locale == "zh_TW"> font-family: NotoSans, NotoSansCJKtc, sans-serif;
                 <#elseif .locale == "ja_JP"> font-family: NotoSans, NotoSansCJKjp, sans-serif;
@@ -228,17 +190,11 @@
                     background-color: #e3e3e3;
                     height: 1px;
                 }
-        </style>
-    </head>
-    <body header="nlheader" header-height="13%" footer="nlfooter" footer-height="20pt"  size="Letter">
-        <table  style="width: 100%; margin-top: 10px; border-bottom: 1px solid black">
-            <tr>
-                <td colspan="10" style="font-size:9px;" align="left">
-                    <b>Facturado a: </b><br />
-					${record.entity}
-                </td>
-            </tr>
-
-        </table>
-    </body>
+</style>
+</head>
+<body header="nlheader" header-height="13%" footer="nlfooter" footer-height="20pt" padding="0.5in 0.5in 0.5in 0.5in" size="Letter">
+    <table style="width: 100%; margin-top: 10px; border-bottom: 1px solid black"><tr>
+	<td align="left" colspan="10" style="font-size:9px;"><b>Facturado a: </b><br />${record.entity}</td>
+	</tr></table>
+</body>
 </pdf>
