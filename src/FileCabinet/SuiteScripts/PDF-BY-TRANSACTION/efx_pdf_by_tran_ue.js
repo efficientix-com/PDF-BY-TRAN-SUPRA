@@ -40,8 +40,6 @@ function(log, runtime, record, search) {
                     var status = objRecord.getValue("status");
                     log.audit({title: 'status', details: status});
                     if (scriptContext.type === scriptContext.UserEventType.VIEW && status === "Enviado") {
-                        log.audit({title:'cheques', details: 'caso de cheques'});
-                        log.audit({title:'account id', details: runtime.accountId});
                         log.audit('transaction parameters', {
                             typeTransaction: typeTransaction,
                             templateID: templateID,

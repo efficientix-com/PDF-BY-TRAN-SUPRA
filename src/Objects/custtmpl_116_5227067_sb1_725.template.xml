@@ -308,9 +308,12 @@
                     </#if>
                 </tr>
             </thead>
+            <#assign subtotal = 0>
+            <#assign taxamount = 0>
+            <#--  <#assign total = 0>  -->
             <#list record.item as item>
-                <#list custom.odvdata as item_ns>
-                    <#if item.orderline == item_ns.line>
+                <#list custom.odvdata as data_ns>
+                    <#if item.orderline == data_ns.line>
                         <tr>
                             <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.quantity}</td>
                             <td align="center" colspan="2" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.unitsdisplay}</td>
@@ -320,19 +323,35 @@
                             <td align="center" colspan="8" style="font-size: 5pt; padding-top: 4px;">${item.description}</td>
                             <td align="center" colspan="5" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item.custcol_efx_fe_upc_code}</td>
                             <#if record.custbody_tko_pdf_by_tran_costos == true>
-                                <#assign cantidad_IF = item.quantity>
-                                <#assign cantidad_odv = item.quantityremaining>
+                                <#assign cantidad_IF = item.quantity?string[",##0"]>
+                                <#assign cantidad_odv = data_ns.quantity_odv?string>
                                 <#if cantidad_IF != cantidad_odv>
-<<<<<<< HEAD
-                                    <#assign monto = item_ns.rate?number * cantidad_IF?number>
-                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${monto}</td>
-                                    <#--  <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.rate} * ${cantidad_IF} = ${monto}</td>  -->
-=======
-                                    <#assign monto = item_ns.grossamt?number * cantidad_IF?number>
-                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.grossamt} * ${cantidad_IF} = ${monto}</td>
->>>>>>> 067431f7f425734b27d83e86e9c849e0b98194d4
+                                    <#-- ! Remision parcial  -->
+                                    <#assign monto = data_ns.rate?number * cantidad_IF?number>
+                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${monto?string[',###.00']}</td>
+                                    <#assign subtotal = subtotal + monto>
+
+                                    <#assign json = data_ns.tax_json_line>
+                                    <#if json?has_content>
+                                        <#assign desglose_line = json?eval>
+                                    <#else>
+                                        <#assign desglose_line = {}>
+                                    </#if>
+
+                                    <#assign tasa_impuesto = desglose_line.iva.rate_div?number>
+                                    <#assign taxamount = taxamount + (monto * tasa_impuesto)>
                                 <#else>
-                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${item_ns.grossamt}</td>
+                                    <#-- ?  Remision completa  -->
+                                    <td align="center" colspan="4" style="font-size: 5pt; padding-top: 4px; padding-left: 0px; padding-right: 0px;">${data_ns.grossamt?number?string[',###.00']}</td>
+                                    <#assign subtotal = subtotal + data_ns.grossamt?number>
+
+                                    <#assign json = data_ns.tax_json_line>
+                                    <#if json?has_content>
+                                        <#assign desglose_line = json?eval>
+                                    <#else>
+                                        <#assign desglose_line = {}>
+                                    </#if>
+                                    <#assign taxamount = taxamount + desglose_line.iva.importe?number>
                                 </#if>
                             </#if>
                         </tr>
@@ -340,6 +359,27 @@
                 </#list>
             </#list>
 
+        </table>
+        <table style="width: 100%; margin-top: 10px;">
+            <tr style="margin-top: 10px">
+                <td align="right" colspan="11" style="font-size: 8px;font-weight: bold;">SubTotal:</td>
+                <td align="right" colspan="1" style="font-size: 8px;font-weight: bold;">
+                    ${subtotal?string[',###.00']}
+                </td>
+            </tr>
+            <tr style="margin-top: 5px">
+                <td align="right" colspan="11" style="font-size: 8px;font-weight: bold;">Impuestos:</td>
+                <td align="right" colspan="1" style="font-size: 8px;font-weight: bold; border-bottom: 1px solid black">
+                    ${taxamount?string[',###.00']}
+                </td>
+            </tr>
+            <tr style="margin-top: 5px">
+                <td align="right" colspan="11" style="font-size: 8px;font-weight: bold;">Total:</td>
+                <td align="right" colspan="1" style="font-size: 8px;font-weight: bold;">
+                    <#assign total = subtotal + taxamount>
+                    ${total?string[',###.00']}
+                </td>
+            </tr>
         </table>
 
     </body>

@@ -30,7 +30,7 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                 // Recepcion de parametros
                 if (typeRecord != "check") {
                     if (typeRecord == "itemfulfillment") {
-                        var templateID = params.templateID, recordID = params.recordID, savedSearch = params.savedSearch, requiredSearch = params.requiredSearch;;
+                        var templateID = params.templateID, recordID = params.recordID, savedSearch = params.savedSearch, requiredSearch = params.requiredSearch;
                         log.audit('remision params data', {
                             templateID: templateID,
                             recordID: recordID,
@@ -39,7 +39,7 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                             requiredSearch: requiredSearch
                         });
                     }else{
-                        var generic_templateID = params.generic_templateID, recordID = params.recordID, savedSearch = params.savedSearch, requiredSearch = params.requiredSearch;;
+                        var generic_templateID = params.generic_templateID, recordID = params.recordID, savedSearch = params.savedSearch, requiredSearch = params.requiredSearch;
                         log.audit('generic params data', {
                             generic_templateID: generic_templateID,
                             recordID: recordID,
@@ -338,9 +338,15 @@ define(['N/log', 'N/render', 'N/record', 'N/ui/serverWidget', 'N/search'],
                     item: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'item', line: item }),
                     line: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'line', line: item }),
                     rate: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'rate', line: item }),
+                    tax_json_line: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'custcol_efx_fe_tax_json', line: item }),
+                    quantity_odv: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'quantity', line: item }),
                     grossamt: tran_obj_ov.getSublistValue({ sublistId: 'item', fieldId: 'grossamt', line: item })
                 });
             }
+            /* data.push({
+                // ! Revisar muy bien que funcione esta idea de llevarse el tax_json
+                tax_json: tran_obj_ov.getValue({ fieldId: 'custbody_efx_fe_tax_json'})
+            }) */
             log.audit({ title: 'data', details: data });
             return data;
         }
